@@ -1,0 +1,190 @@
+/* =============================================
+   ROOT VARIABLES & CORE STYLES
+   ============================================= */
+   :root {
+    /* Color Palette */
+    --primary: #9f83d8;       /* Cheeky purple */
+    --primary-light: #c2ade6;
+    --primary-dark: #7e68b0;
+    --accent-yellow: #fce38a; /* Banana yellow */
+    --accent-mint: #a8e6cf;   /* Fresh mint */
+    --accent-coral: #ffaaa5;  /* Playful coral */
+    --text-dark: #2b2b3a;     /* Deep navy */
+    --text-light: #fff9fe;    /* Soft white */
+    --bg-light: #fff9fe;
+    --bg-dark: #342c67;
+  
+    /* Typography */
+    --font-display: 'Mochiy Pop One', sans-serif;
+    --font-body: 'Cabin', sans-serif;
+    --font-size-base: 18px;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.5rem;
+    --font-size-xl: 2.5rem;
+    --font-size-xxl: 3.5rem;
+  
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+    --space-xxl: 4rem;
+  
+    /* Borders & Radius */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-pill: 999px;
+    --border-thin: 2px solid;
+    --border-thick: 4px solid;
+  
+    /* Shadows & Effects */
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+    --glow-primary: 0 0 12px rgba(159, 131, 216, 0.5);
+    --glow-yellow: 0 0 15px rgba(252, 227, 138, 0.6);
+  
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-slow: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  /* =============================================
+     BASE RESET & TYPOGRAPHY
+     ============================================= */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html {
+    font-size: var(--font-size-base);
+    scroll-behavior: smooth;
+    background-color: var(--bg-light);
+  }
+  
+  body {
+    font-family: var(--font-body);
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+    color: var(--primary-dark);
+  }
+  
+  h1 { font-size: var(--font-size-xxl); }
+  h2 { font-size: var(--font-size-xl); }
+  h3 { font-size: var(--font-size-lg); }
+  h4 { font-size: var(--font-size-md); }
+  
+  p {
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-md);
+  }
+  
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+  
+  a:hover {
+    color: var(--primary-dark);
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* =============================================
+     BASE LAYOUT ELEMENTS
+     ============================================= */
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+  
+  .section {
+    padding: var(--space-xl) 0;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: var(--accent-yellow);
+    margin: var(--space-sm) auto;
+    border-radius: var(--radius-pill);
+  }
+  
+  /* =============================================
+     UTILITY CLASSES
+     ============================================= */
+  .text-center { text-align: center; }
+  .text-left { text-align: left; }
+  .text-right { text-align: right; }
+  
+  .bg-primary { background-color: var(--primary); }
+  .bg-yellow { background-color: var(--accent-yellow); }
+  .bg-mint { background-color: var(--accent-mint); }
+  
+  .rounded { border-radius: var(--radius-md); }
+  .rounded-full { border-radius: var(--radius-pill); }
+  
+  .shadow { box-shadow: var(--shadow-sm); }
+  .shadow-md { box-shadow: var(--shadow-md); }
+  .shadow-lg { box-shadow: var(--shadow-lg); }
+  
+  /* =============================================
+     WHIMSICAL DETAILS
+     ============================================= */
+  ::selection {
+    background-color: var(--accent-coral);
+    color: white;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--primary-light);
+    border-radius: var(--radius-pill);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--primary-light);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+  }

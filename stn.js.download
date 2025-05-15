@@ -1,0 +1,577 @@
+/*jslint white: true, browser: true, devel: true, onevar: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, regexp: false, newcap: true, immed: true, strict: true */
+/*globals STN, YAHOO, window*/
+
+(function () {
+	"use strict";
+	
+	if (!Array.prototype.indexOf) {
+		Array.prototype.indexOf = function (elt /*, from*/) {
+			var len, from;
+			len = this.length >>> 0;
+			from = Number(arguments[1]) || 0;
+			from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+			if (from < 0) {
+				from += len;
+			}
+			for (; from < len; from += 1) {
+				if (
+					from in this &&
+					this[from] === elt
+				) {
+					return from;
+				}
+			}
+			return -1;
+		};
+	}
+	
+	STN.remove = function (arr, from, to) {
+		var rest = arr.slice((to || from) + 1 || arr.length);
+		arr.length = from < 0 ? arr.length + from : from;
+		return arr.push.apply(arr, rest);
+	};
+	
+	if (!String.prototype.trim) {
+		String.prototype.trim = function () {
+			return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+		};
+	}
+	
+	window.STN = (typeof window.STN === 'undefined') ? {} : window.STN;
+	
+	STN.lib = {};
+	
+	STN.ltrim = function (str) {
+		return str.replace(/^\s\s*/, '');
+	};
+	
+	STN.rtrim = function (str) {
+		return str.replace(/\s\s*$/, '');
+	};
+	
+	STN.each = function (map, func, filtered) {
+		var key, control;
+		filtered = (typeof filtered === "undefined") ? true : filtered;
+		if (filtered) {
+			for (key in map) {
+				if (map.hasOwnProperty) {
+					if (map.hasOwnProperty(key)) {
+						control = func(map[key], key);
+						if (control === 'break') {
+							break;
+						}
+						if (control === 'continue') {
+							continue;
+						}
+					}
+				} else {
+					for (key in map) {
+						control = func(map[key], key);
+					}
+				}
+			}
+		} else {
+			for (key in map) {
+				control = func(map[key], key);
+			}
+		}
+	};
+	
+	STN.foreach = STN.each;
+	
+	STN.array_search = function (array, item) {
+		var location;
+		STN.each(array, function (needle, key) {
+			if (needle == item) {
+				location = key;
+				return 'break';
+			}
+		});
+		return location;
+	};
+	
+	STN.unique = function (array) {
+		var uniq = [];
+		
+		STN.each(array, function (item) {
+			if (uniq.indexOf(item) === -1) {
+				uniq.push(item);
+			}
+		});
+		
+		return uniq;
+	};
+	
+	STN.removeElement = function (elem) {
+		if (elem && elem.parentNode) {
+			return elem.parentNode.removeChild(elem);
+		}
+	};
+	
+	STN.setTextContent = function (node, text) {
+		while (node.firstChild) {
+			STN.removeElement(node.firstChild);
+		}
+		node.appendChild(document.createTextNode(text));
+	};
+	
+	STN.getTextContent = function (node) {
+		if (node.textContent) {
+			return node.textContent;
+		} else if (node.innerText) {
+			return node.innerText;
+		}
+	};
+	
+	STN.getParentCount = 0;
+	
+	STN.getParent = function (node, selector) {
+		var parent = node, test;
+		
+		STN.getParentCount += 1;
+		
+		while (parent && (test = YAHOO.util.Selector.test(parent, selector) === false)) {
+			parent = parent.parentNode;
+		}
+		
+		if (!parent) {
+			return false;
+		}
+		
+		return parent;
+	};
+	
+	STN.console = {
+		log: function () {
+			var msgs = [], i, console, msg;
+			
+			if (document.getElementById("stn-console")) {
+				console = document.getElementById("stn-console");
+			} else {
+				console = document.createElement('ul');
+				console.id = 'stn-console';
+				switch (window.location.hostname) {
+				case "luke.stoysnet.com":
+				case "www.stoysnet.com":
+				case "cart.stoysnet.com":
+				case "stoysnet.com":
+					console.style.display = "block";
+					break;
+				default:
+					console.style.display = "none";
+					return;
+				}
+				document.body.appendChild(console);
+			}
+			for (i = 0; i < arguments.length; i += 1) {
+				msgs.push(arguments[i]);
+			}
+			
+			msg = document.createElement('li');
+			msg.appendChild(document.createTextNode(msgs.join(' ')));
+			
+			console.appendChild(msg);
+		}
+	};
+	
+	if (typeof window.console === 'undefined') {
+		window.console = STN.console;
+	}
+	
+	STN.init = function (images, logo) {
+		var preload = new Image(), logoImg, logoImgOff, logoImgOn, YUE;
+		YUE = YAHOO.util.Event;
+		
+		STN.each(images, function (image) {
+			preload.src = image;
+		});
+		
+		if (logo) {
+			logoImg = document.getElementById(logo);
+			if (logoImg) {
+				if (logoImg.tagName.toLowerCase() === 'a') {
+					logoImg = logoImg.firstChild;
+				}
+				
+				YAHOO.util.Dom.addClass(logoImg, 'hoverable');
+			}
+		}
+		
+		(function () {
+			var YUSQ, hoverables;
+			YUSQ = YAHOO.util.Selector.query;
+			hoverables = YUSQ('.hoverable>img, img.hoverable');
+			
+			STN.each(hoverables, function (img) {
+				var originalSrc, newSrc;
+				originalSrc = img.src;
+				newSrc = originalSrc.replace(
+					/^(.*)\.(.*?)$/,
+					"$1_on.$2"
+				);
+				preload.src = newSrc;
+				
+				YUE.addListener(img, 'mouseover', function (e) {
+					img.src = newSrc;
+				});
+				
+				YUE.addListener(img, 'mouseout', function (e) {
+					img.src = originalSrc;
+				});
+			});
+			
+		}());
+	};
+	
+	STN.popup = function (href, w, h) {
+		var x, y;
+		
+		x = window.screenX + window.outerWidth / 2 - w / 2;
+		y = window.screenY + window.outerHeight / 2 - h / 2;
+		
+		window.open(href, '_blank', [
+			'width=' + w,
+			'height=' + h,
+			//'location=0',
+			'top=' + y,
+			'left=' + x,
+			'menubar=0',
+			'scrollbars=0',
+			'status=0',
+			'toolbar=0',
+			'resizable=1'
+		].join(','));
+		
+		return false;
+	};
+	
+	STN.once = function (fn) {
+		var func = fn, retFn;
+		
+		retFn = function () {
+			if (func) {
+				func.apply(arguments);
+				func = null;
+			}
+		};
+		
+		return retFn;
+	};
+	
+	STN.luhn = function (num) {
+		if (parseInt(num, 10) === 0) {
+			return false;
+		}
+		num = (num + '').replace(/\D+/g, '').split('').reverse();
+		if (!num.length) {
+			return false;
+		}
+		var total = 0, i;
+		
+		for (i = 0; i < num.length; i += 1) {
+			if (num.hasOwnProperty(i)) {
+				num[i] = parseInt(num[i], 10);
+				total += i % 2 ? 2 * num[i] - (num[i] > 4 ? 9 : 0) : num[i];
+			}
+		}
+		
+		return (total % 10) === 0;
+	};
+	
+	STN.idCard = function (ccnum) {
+		var regExes, cardName, funcs, failed = false;
+		ccnum = ccnum.replace(/\D+/g, '');
+		regExes = {
+			//Matches cards with 15 digits beginning with 34 or 35
+			'American Express': [/^(34|37)\d{13}$/],
+			
+			//Matches cards with 12 to 19 digits beginning with one of the following
+			//	5018, 5020, 5038, 6304, 6759, 6761, 6763
+			'Maestro': [/^(5018|5020|5038|6304|6759|6761|6763)\d{8,15}$/],
+			
+			//Matches cards with 16 digits beginning with 54 or 55
+			'MasterCard or Diners Club US and Canada': [/^(54|55)\d{14}$/],
+			
+			//Matches cards with 15 digits beginning with 51 through 55
+			'MasterCard': [/^5[1-5]\d{14}$/],
+			
+			//Matches cards with 14 digits beginning with 300 to 305
+			'Diners Club Carte Blanche': [/^30[0-5]\d{11}$/],
+			
+			//Matches cards with 14 digits beginning with 36 or 38
+			'Diners Club International': [/^(36|38)\d{12}$/],
+			
+			'Discover Card': [
+				//Matches a specific range of 16 digit cards between 6221 and 6229
+				/^622[1-9]\d{12}$/, //needs further validation
+				//Matches 16 digit cards starting with 6011
+				/^6011\d{12}$/,
+				//Matches 16 digit cards starting between 644 and 649
+				/^64[4-9]\d{13}$/,
+				//matches 16 digit cards starting with 65
+				/^65\d{14}$/
+			],
+			
+			//Matches 16 digit cards between 3528 and 3589
+			'JCB': [/^35[2-8]\d{13}$/], //needs further validation
+			
+			'Visa Electron': [
+				//Matches 16 digit cards starting with an entry from this list:
+				//	4026, 4508, 4844, 4913, 4917
+				/^(4026|4508|4844|4913|4917)\d{12}$/,
+				//Matches 16 digit cards starting with 417500
+				/^417500\d{10}$/
+			],
+			
+			//Matches 16 digit cards starting with a 4
+			'Visa': [/^4\d{12,15}$/]
+		};
+		
+		// These do extended validation
+		funcs = {
+			'Discover Card': function (cc) {
+				var relevant;
+				// this should return true for card ranges: 622126-622925 and
+				// all other discover cards.
+				relevant = parseInt(cc.substring(3, 6), 10);
+				
+				/*
+				console.log("relevant:", relevant);
+				console.log("cc:", cc);
+				console.log("cc.substring:", cc.toString().substring(3, 6));
+				*/
+				
+				if (cc.match(/^622[1-9]\d{12}$/) && relevant >= 126 && relevant <= 925) {
+					return true;
+				}
+				
+				if (cc.match(/^6011\d{12}$/)) {
+					return true;
+				}
+				
+				if (cc.match(/^64[4-9]\d{13}$/)) {
+					return true;
+				}
+				
+				if (cc.match(/^65\d{14}$/)) {
+					return true;
+				}
+				
+				return false;
+			},
+			'JCB': function (cc) {
+				var relevant;
+				// this should return true for card ranges: 3528-3589
+				relevant = parseInt(cc.toString().substring(2, 4), 10);
+				
+				if (relevant >= 28 && relevant <= 89) {
+					return true;
+				}
+				
+				return false;
+			}
+		};
+		
+		STN.each(regExes, function (array, card) {
+			STN.each(array, function (regEx) {
+				
+				if (ccnum.match(regEx)) {
+					cardName = card;
+					return "break";
+				}
+				
+			});
+			
+			if (cardName === card) {
+				return "break";
+			}
+			
+		});
+		
+		STN.each(funcs, function (func, card) {
+			
+			if (cardName === card) {
+			
+				if (func(ccnum) === false) {
+					failed = true;
+				}
+			
+			}
+			
+		});
+		
+		if (STN.luhn(ccnum) === false) {
+			return false; // indicates an invalid card
+		}
+		
+		if (failed) {
+			return false; // indicates an invalid card
+		}
+		
+		if (typeof cardName === 'string') {
+			return cardName;
+		}
+		
+		return false; // indicates an invalid card
+	};
+	
+	STN.matchEmail = function (email) {
+		// this (loosely) validate emails
+		//return /\b[A-Z0-9._%+\-]+@(?:[A-Z0-9\-]+\.)+[A-Z]{2,4}\b/.test(email);
+		return (/^[A-Z0-9._%+\-]+@(?:[A-Z0-9\-]+\.)+[A-Z]{2,6}$/i).test(email);
+	};
+	
+	STN.lib.arrayCursor = function (backing) {
+		var cursor = 0;
+		return {
+			array: backing,
+			getNext: function () {
+				var next = cursor + 1;
+				
+				if (next < backing.length) {
+					return next;
+				} else {
+					return 0;
+				}
+			},
+			getPrev: function () {
+				var prev = cursor - 1;
+				
+				if (prev < 0) {
+					return (backing.length - 1);
+				} else {
+					return prev;
+				}
+			},
+			setIndex: function (index) {
+				if (index < 0) {
+					throw "Index out of bounds: " + index;
+				}
+				if (index >= backing.length) {
+					throw "Index out of bounds: " + index;
+				}
+				cursor = index;
+				return this;
+			},
+			getIndex: function () {
+				return cursor;
+			},
+			setNext: function () {
+				return this.setIndex(this.getNext());
+			},
+			setPrev: function () {
+				return this.setIndex(this.getPrev());
+			},
+			isLast: function () {
+				return cursor === (backing.length -1);
+			},
+			isFirst: function () {
+				return cursor === 0;
+			}
+		};
+	};
+	
+	STN.toArray = function (obj, key) {
+		var list = [];
+		
+		STN.each(obj, function (value) {
+			if (key) {
+				list.push(value.key);
+			}
+			
+			list.push(value);
+		});
+		
+		return list;
+	};
+	
+	STN.toMap = function (array, lookupKey) {
+		if (!array || !array.length) {
+			return {};
+		}
+		
+		var len = array.length;
+		var map = {}, i, k, v;
+		
+		for (i=0; i < len; i += 1) {
+			v = array[i];
+			k = v[lookupKey];
+			
+			map[k] = v;
+		}
+		
+		return map;
+	};
+	
+	STN.keys = function (map, f) {
+		var array = [];
+		
+		for (var key in map) {
+			if (map.hasOwnProperty(key)) {
+				if (f) {
+					array.push(f(key));
+				} else {
+					array.push(key);
+				}
+			}
+		}
+		
+		return array;
+	};
+	
+	STN.isEmpty = function (map) {
+		if (typeof map === 'number' && map > 0 || map < 0) {
+			return false;
+		}
+		
+		if (!map) {
+			return true;
+		} else if (map.hasOwnProperty('length') && map.length <= 0) {
+			return true;
+		}
+		
+		for (var key in map) {
+			if (map.hasOwnProperty(key)) {
+				return false;
+			}
+		}
+		
+		return true;
+	};
+	
+	var payloads = {};
+	
+	STN.registerPayload = function (id, data) {
+		if (payloads.hasOwnProperty(id)) {
+			throw "Widget " + id + " already had payload";
+		}
+		
+		payloads[id] = data;
+	};
+	
+	STN.consumePayload = function (id) {
+		var payload = payloads[id];
+		
+		payloads[id] = null;
+		
+		return payload;
+	};
+	
+	STN.isChecked = function (id) {
+		var elem = document.getElementById(id);
+		return elem ? Boolean(elem.checked) : false;
+	};
+	
+	STN.link = function (rel) {
+		var base = $.trim(STN.live_site, '/');
+		rel = $.trim(rel, '/');
+		return [base, rel].join('/');
+	}
+	
+	STN.getParam = function getURLParameter(name) {
+		name = name.replace(/\[/g, '\\[');
+		name = name.replace(/\]/g, '\\]');
+		return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+	};
+	
+} ());
