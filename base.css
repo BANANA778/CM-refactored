@@ -3,14 +3,14 @@
    ============================================= */
    :root {
     /* Color Palette */
-    --primary: #9f83d8;       /* Cheeky purple */
+    --primary: #9f83d8;       
     --primary-light: #c2ade6;
     --primary-dark: #7e68b0;
-    --accent-yellow: #fce38a; /* Banana yellow */
-    --accent-mint: #a8e6cf;   /* Fresh mint */
-    --accent-coral: #ffaaa5;  /* Playful coral */
-    --text-dark: #2b2b3a;     /* Deep navy */
-    --text-light: #fff9fe;    /* Soft white */
+    --accent-yellow: #fce38a; 
+    --accent-mint: #a8e6cf;   
+    --accent-coral: #ffaaa5;  
+    --text-dark: #2b2b3a;     
+    --text-light: #fff9fe;    
     --bg-light: #fff9fe;
     --bg-dark: #342c67;
   

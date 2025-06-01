@@ -111,6 +111,11 @@
     color: var(--primary);
     font-size: 1.25rem;
   }
+  .sidebar .footer-links .divider {
+    list-style-type: none;
+    padding-left: 0;
+}
+
   
   /* =============================================
      FORM ELEMENTS
