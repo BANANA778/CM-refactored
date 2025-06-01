@@ -288,48 +288,80 @@
                     dropdown.querySelector('.dropdown-content').style.display = 'none';
                 });
             });
-        });
-        
-        // Brand Scroller Script
-        (function() {
-            document.addEventListener('DOMContentLoaded', function() {
-                // Find the original brand links container
-                const originalBrandsList = document.querySelector('.advanced_display .links');
-                if (!originalBrandsList) return;
+
+            // Brand Scroller Script
+            const brandsContainer = document.querySelector('.brands-container');
+            const brandsScroll = document.getElementById('brands-scroll');
+            if (!brandsContainer || !brandsScroll) return;
+            
+            const scrollSpeed = 5;
+            const edgeThreshold = 50;
+            let scrollDirection = 0;
+            let isScrolling = false;
+            let animationId = null;
+
+            // Update scroll position continuously
+            function updateScroll() {
+                brandsContainer.scrollLeft += scrollSpeed * scrollDirection;
+                animationId = requestAnimationFrame(updateScroll);
+            }
+
+            brandsContainer.addEventListener('mousemove', (e) => {
+                const containerRect = brandsContainer.getBoundingClientRect();
+                const mouseX = e.clientX - containerRect.left;
+                const containerWidth = containerRect.width;
                 
-                // Get all brand links except "See All"
-                const brandLinks = Array.from(originalBrandsList.querySelectorAll('a:not(.category-view-all)'));
+                if (mouseX < edgeThreshold) {
+                    scrollDirection = -1; // Scroll left
+                } else if (mouseX > containerWidth - edgeThreshold) {
+                    scrollDirection = 1; // Scroll right
+                } else {
+                    scrollDirection = 0;
+                    cancelAnimationFrame(animationId);
+                    isScrolling = false;
+                    return;
+                }
                 
-                // Get the scroll container
-                const brandsScroll = document.getElementById('brands-scroll');
-                if (!brandsScroll) return;
-                
-                // Generate brand cards
-                brandsScroll.innerHTML = brandLinks.map((link, index) => {
-                    const brandName = link.textContent.trim();
-                    // Extract brand name for logo filename
-                    const logoName = brandName.toLowerCase()
-                        .replace(/&/g, 'and')
-                        .replace(/[^a-z0-9]/g, '-')
-                        .replace(/-+/g, '-');
-                    
-                    return `
-                        <a href="${link.href}" class="brand-card" aria-label="${brandName}">
-                            <div class="brand-content">
-                                <img src="images/brands/${logoName}.png" 
-                                    alt="${brandName}" 
-                                    class="brand-logo"
-                                    onerror="this.style.display='none'">
-                                <h3 class="brand-name">${brandName}</h3>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
-                
-                // Hide the original brand list
-                originalBrandsList.closest('.advanced_display').style.display = 'none';
+                if (!isScrolling) {
+                    isScrolling = true;
+                    updateScroll();
+                }
             });
-        })();
+            
+            brandsContainer.addEventListener('mouseleave', () => {
+                scrollDirection = 0;
+                isScrolling = false;
+                cancelAnimationFrame(animationId);
+            });
+
+            // Original brand card generation code
+            const originalBrandsList = document.querySelector('.advanced_display .links');
+            if (!originalBrandsList) return;
+            
+            const brandLinks = Array.from(originalBrandsList.querySelectorAll('a:not(.category-view-all)'));
+            
+            brandsScroll.innerHTML = brandLinks.map((link, index) => {
+                const brandName = link.textContent.trim();
+                const logoName = brandName.toLowerCase()
+                    .replace(/&/g, 'and')
+                    .replace(/[^a-z0-9]/g, '-')
+                    .replace(/-+/g, '-');
+                
+                return `
+                    <a href="${link.href}" class="brand-card" aria-label="${brandName}">
+                        <div class="brand-content">
+                            <img src="images/brands/${logoName}.png" 
+                                alt="${brandName}" 
+                                class="brand-logo"
+                                onerror="this.style.display='none'">
+                            <h3 class="brand-name">${brandName}</h3>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+            
+            originalBrandsList.closest('.advanced_display').style.display = 'none';
+        });
     </script>
 </body>
 </html>

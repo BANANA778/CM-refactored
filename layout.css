@@ -162,18 +162,35 @@
     list-style: none;
   }
   
-  .footer-links li {
+  /* Remove these generic rules: */
+.footer-links li {
     margin-bottom: var(--space-sm);
-  }
-  
-  .footer-links a {
-    color: #ffffff;
+    /* Remove color: #000000; */
+}
+
+.footer-links a {
+    /* Remove color: #000000; */
+}
+
+/* Keep these specific rules: */
+.footer .footer-links a {
+    color: var(--text-light); 
     transition: color var(--transition-fast);
-  }
-  
-  .footer-links a:hover {
+}
+
+.footer .footer-links a:hover {
     color: var(--accent-yellow);
-  }
+}
+
+/* Add for sidebar links */
+.sidebar .footer-links a {
+    color: var(--text-dark);
+    transition: color var(--transition-fast);
+}
+
+.sidebar .footer-links a:hover {
+    color: var(--primary-dark);
+}
   
   /* =============================================
      RESPONSIVE ADJUSTMENTS

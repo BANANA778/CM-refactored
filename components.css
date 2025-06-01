@@ -113,8 +113,21 @@
   }
   .sidebar .footer-links .divider {
     list-style-type: none;
-    padding-left: 0;
-}
+    padding: var(--space-sm) 0;
+    margin: var(--space-sm) 0;
+    text-align: center;
+    position: relative;
+  }
+
+  .sidebar .footer-links .divider::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+  }
 
   
   /* =============================================
@@ -250,12 +263,21 @@
   
   .brands-container {
     overflow-x: auto;
-    padding: 30px 0; /* Increased padding */
-    margin: -20px 0; /* Negative margin to compensate */
+    scroll-behavior: smooth; /* Add smooth scrolling */
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     overflow-y: visible;
-  }
+    cursor: grab; /* Show grab cursor */
+}
+
+.brands-container:active {
+    cursor: grabbing; /* Show grabbing cursor when dragging */
+}
+
+/* Hide scrollbar but keep functionality */
+.brands-container::-webkit-scrollbar {
+    display: none;
+}
   
   .brands-scroll {
     display: inline-flex;
