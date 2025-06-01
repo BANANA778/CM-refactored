@@ -33,7 +33,134 @@
     gap: var(--space-md);
     list-style: none;
   }
-  
+    /* =============================================
+    HERO GRID LAYOUT
+    ============================================= */
+  .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+  }
+
+  .hero-image {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+  }
+
+  .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+
+  .hero-welcome {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  }
+
+  /* =============================================
+    LOCATION BANNER
+    ============================================= */
+  .location-banner {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--space-lg);
+      background-color: var(--primary-light);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      margin: var(--space-xl) 0;
+      box-shadow: var(--shadow-md);
+  }
+
+  .location-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  }
+
+  .location-info h3 {
+      color: var(--primary-dark);
+      margin-bottom: var(--space-md);
+  }
+
+  .location-info address {
+      margin-bottom: var(--space-md);
+      font-style: normal;
+  }
+
+  .location-info strong {
+      color: var(--primary-dark);
+      font-family: var(--font-display);
+  }
+
+  .location-map {
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+      .hero-grid {
+          grid-template-columns: 1fr;
+      }
+      
+      .location-banner {
+          grid-template-columns: 1fr;
+      }
+      
+      .hero-image {
+          height: 300px;
+      }
+  }
+    /* =============================================
+    SOCIAL LINKS STYLING
+    ============================================= */
+  .social-heading {
+      text-align: center;
+      color: var(--accent-yellow);
+      font-weight: bold;
+      margin-bottom: var(--space-md);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  }
+
+  /* =============================================
+    LOCATION TITLE STYLING
+    ============================================= */
+  .location-title {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+  }
+
+  /* =============================================
+    ADJUSTED MAP SIZES
+    ============================================= */
+  .location-map {
+      height: 200px; /* Reduced from 250px */
+  }
+
+  .locations-grid {
+      gap: var(--space-md); /* Reduced gap between maps */
+      max-width: 1100px; /* Slightly narrower container */
+  }
+
+  .location-card {
+      margin: 0 10px; /* Added small side margins */
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+      .location-map {
+          height: 180px;
+      }
+      
+      .location-card {
+          margin: 0 auto 20px;
+      }
+  }
   /* =============================================
      HERO SECTION
      ============================================= */
@@ -75,7 +202,89 @@
     color: white;
     margin-bottom: var(--space-xl);
   }
-  
+    /* =============================================
+    HEADER UPDATES
+    ============================================= */
+  .logo {
+      font-size: var(--font-size-xl); /* Larger text */
+      align-items: center;
+  }
+
+  .logo-img {
+      width: 60px; /* Slightly smaller logo */
+      height: 60px;
+      margin: 0 -8px; /* Overlap with text */
+  }
+
+  .logo-text-before,
+  .logo-text-after {
+      display: inline-block;
+      vertical-align: middle;
+  }
+
+  .main-nav ul {
+      gap: var(--space-sm); /* Reduced gap between nav items */
+  }
+
+  .nav-link {
+      font-size: var(--font-size-md); /* Smaller nav text */
+      padding: var(--space-xs) var(--space-sm);
+  }
+
+  /* =============================================
+    LOCATION BANNER UPDATES
+    ============================================= */
+  .locations-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      max-width: 1000px; /* Narrower container */
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+  }
+
+  .location-card {
+      background: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+  }
+
+  .location-map {
+      height: 180px; /* Smaller map height */
+  }
+
+  .location-info {
+      padding: var(--space-md);
+      text-align: center;
+  }
+
+  /* =============================================
+    HERO IMAGE UPDATE
+    ============================================= */
+  .hero-image img {
+      border-radius: 0 !important; /* Remove rounded corners */
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+      .logo {
+          font-size: var(--font-size-lg);
+      }
+      
+      .logo-img {
+          width: 50px;
+          height: 50px;
+      }
+      
+      .locations-grid {
+          grid-template-columns: 1fr;
+      }
+      
+      .nav-link {
+          font-size: var(--font-size-sm);
+      }
+  }
   /* =============================================
      PRODUCT GRID
      ============================================= */
